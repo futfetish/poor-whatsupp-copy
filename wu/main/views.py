@@ -85,7 +85,7 @@ def create_msg(request):
         text = request.POST.get('text')
         point_id = request.POST.get('point')
         point = C_user.objects.get(id=point_id)
-        if not point.blacklist.filter(id=request.user.id).exists():
+        if not point.blacklist.filter(id=request.user.id).exists() and text.strip():
             Msg.objects.create(sent=request.user, point=point, text=text)
 
 
