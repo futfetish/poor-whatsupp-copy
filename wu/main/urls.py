@@ -14,5 +14,6 @@ urlpatterns = [
     path('search2/' , views.search2 , name='search2'),
     path('create_msg' , views.create_msg , name='create_msg'),
     path('delete/msg/<int:msg_id>' , views.del_msg , name='delete_msg'),
-    path('block/<int:prof_id>' , views.block , name='block')
+    path('block/<int:prof_id>' , views.block , name='block'),
+    path('msgs/<int:pk>' ,views.msgs.as_view() , name='msgs' )
 ]

@@ -1,0 +1,108 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'wu/scss/main.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% for i in messages %}
+             <div id="full_msg{{i.id}}" class="ls__msg">
+        {% if i.sent == request.user %}
+
+                <div class="ls__msg_content ls__r">
+
+
+        {% else %}
+                 <div  class="ls__msg_content ls__l">
+
+        {% endif %}
+
+                 <div class="ls__date">{{i.date}}</div>
+                 <div class="ls__msg_text" id="msg_text{{i.id}}">
+                     <div class="text">{{i.text}}</div>
+
+                     <a href="#" class="ls__settings_but" id="settings_ls{{i.id}}"> <i class="bi bi-three-dots-vertical"></i> </a>
+                 </div>
+                      {% if i.sent == request.user %}
+
+                 <div class="ls__msg_settings_r">
+                                <div style="width : 0px;" id="panel_ls{{i.id}}" class="ls__panel">
+                            <a class="settings_text_ls settings_text_ls{{i.id}}" href="{% url 'delete_msg' i.id %}">Удалить</a>
+                                </div>
+                 </div>
+                     {% endif %}
+                </div>
+                 </div>
+                 {% if i.sent == request.user %}
+                 <script>
+
+document.getElementById('msg_text{{i.id}}').addEventListener('mouseenter', function(event) {
+    document.getElementById('settings_ls{{i.id}}').style.opacity = '1'
+});
+
+
+document.getElementById('msg_text{{i.id}}').addEventListener('mouseleave', function(event) {
+  document.getElementById('settings_ls{{i.id}}').style.opacity = '0'
+});
+
+
+     document.addEventListener('click', function(e) {
+
+if (e.target !== document.getElementById('settings_ls{{i.id}}') && !e.target.closest('#settings_ls{{i.id}}') &&  e.target !== document.getElementById('panel_ls{{i.id}}')) {
+
+
+            document.getElementById('panel_ls{{i.id}}').style.width = '0px';
+
+    document.getElementById('panel_ls{{i.id}}').style.height = '0px';
+    $('.settings_text_ls{{i.id}}').css('font-size', '0');
+      $('.settings_text_ls{{i.id}}').css('color', 'rgba(235, 235, 235 , 0)');
+
+} else if (e.target !==document.getElementById('panel_ls{{i.id}}') ) {
+
+  if (document.getElementById('panel_ls{{i.id}}').style.width !== '0px') {
+
+
+
+    document.getElementById('panel_ls{{i.id}}').style.width = '0px';
+    document.getElementById('panel_ls{{i.id}}').style.height = '0px';
+    $('.settings_text_ls{{i.id}}').css('font-size', '0');
+
+    $('.settings_text_ls{{i.id}}').css('color', 'rgba(235, 235, 235 , 0)');
+  } else {
+
+      setTimeout(function() {
+ $('.settings_text_ls{{i.id}}').css('color', 'rgba(235, 235, 235 , 1)');
+}, 100);
+
+
+    document.getElementById('panel_ls{{i.id}}').style.width = '250px';
+    document.getElementById('panel_ls{{i.id}}').style.height = '56px';
+    $('.settings_text_ls{{i.id}}').css('font-size', '16px');
+  }
+}});
+
+document.addEventListener('contextmenu', function(event) {
+  if (event.target !== document.getElementById('full_msg{{i.id}}') && !event.target.closest('#full_msg{{i.id}}')) {
+
+        document.getElementById('panel_ls{{i.id}}').style.width = '0px';
+    document.getElementById('panel_ls{{i.id}}').style.height = '0px';
+    $('.settings_text_ls{{i.id}}').css('font-size', '0');
+
+    $('.settings_text_ls{{i.id}}').css('color', 'rgba(235, 235, 235 , 0)');
+
+  }
+});
+
+ document.getElementById('full_msg{{i.id}}').addEventListener("contextmenu", function(event) {
+  event.preventDefault();
+
+      setTimeout(function() {
+ $('.settings_text_ls{{i.id}}').css('color', 'rgba(235, 235, 235 , 1)');
+}, 100);
+
+    document.getElementById('panel_ls{{i.id}}').style.width = '250px';
+    document.getElementById('panel_ls{{i.id}}').style.height = '56px';
+    $('.settings_text_ls{{i.id}}').css('font-size', '16px');
+
+});
+
+
+                 </script>
+                 {% endif %}
+        {%endfor%}

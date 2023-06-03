@@ -121,3 +121,13 @@ def block(request , prof_id):
     else:
         request.user.blacklist.remove(user)
     return redirect(request.META.get('HTTP_REFERER'))
+
+class msgs(DetailView):
+    model = C_user
+    template_name = 'wu/msgs.html'
+    context_object_name = 'prof'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['messages'] = Msg.objects.filter(Q(point=self.request.user.id, sent=context['prof']) | Q(point=context['prof'],sent=self.request.user)).order_by('date')
+        return context
