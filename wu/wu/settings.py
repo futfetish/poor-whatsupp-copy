@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-=wshtzx=w4m!xr1rpmm^kx943@ou^!(4+*7l!cm78vg*0916)t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
-    'sass_processor',
+    'channels',
+    'authf',
 ]
 
 MIDDLEWARE = [
@@ -150,3 +151,4 @@ MEDIA_URL = '/media/'
 
 LOGIN_URL = '/login/'
 
+CHANNELS_LAYER = 'channels.layers.DefaultLayer'

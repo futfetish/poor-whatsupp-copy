@@ -1,6 +1,5 @@
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'wu/scss/main.css' %}">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 {% for i in messages %}
              <div id="full_msg{{i.id}}" class="ls__msg">
         {% if i.sent == request.user %}
@@ -22,7 +21,7 @@
                       {% if i.sent == request.user %}
 
                  <div class="ls__msg_settings_r">
-                                <div style="width : 0px;" id="panel_ls{{i.id}}" class="ls__panel">
+                                <div style="width:0px;" id="panel_ls{{i.id}}" class="ls__panel">
                             <a class="settings_text_ls settings_text_ls{{i.id}}" href="{% url 'delete_msg' i.id %}">Удалить</a>
                                 </div>
                  </div>
@@ -59,7 +58,7 @@ if (e.target !== document.getElementById('settings_ls{{i.id}}') && !e.target.clo
 
 
 
-    document.getElementById('panel_ls{{i.id}}').style.width = '0px';
+        document.getElementById('panel_ls{{i.id}}').style.width = '0px';
     document.getElementById('panel_ls{{i.id}}').style.height = '0px';
     $('.settings_text_ls{{i.id}}').css('font-size', '0');
 
@@ -101,6 +100,10 @@ document.addEventListener('contextmenu', function(event) {
     $('.settings_text_ls{{i.id}}').css('font-size', '16px');
 
 });
+
+
+
+
 
 
                  </script>
