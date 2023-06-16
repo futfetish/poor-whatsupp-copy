@@ -51,3 +51,5 @@ function open_panel_1(but, panel, text  , count) {
         }
     });
 }
+
+

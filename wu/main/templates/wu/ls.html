@@ -1,5 +1,5 @@
 {% extends 'wu/layout.html' %}
-{% block title %} wu {% endblock %}
+{% block title %} {{prof.username}} {% endblock %}
 
 {% block top_img %} {{ prof.ava.url }}  {% endblock %}
 {% block info_img %} {{ prof.ava.url }}  {% endblock %}
@@ -34,113 +34,7 @@
         <div class="ls__chat" id="ls_chat">
 
             {% for i in messages %}
-             <div id="full_msg{{i.id}}" class="ls__msg">
-        {% if i.sent == request.user %}
-
-                <div class="ls__msg_content ls__r">
-
-
-        {% else %}
-                 <div  class="ls__msg_content ls__l">
-
-        {% endif %}
-
-                 <div class="ls__date">{{i.date}}</div>
-                 <div class="ls__msg_text" id="msg_text{{i.id}}">
-                     <div class="text">{{i.text}}</div>
-
-                     <a href="#" class="ls__settings_but" id="settings_ls{{i.id}}"> <i class="bi bi-three-dots-vertical"></i> </a>
-                 </div>
-                      {% if i.sent == request.user %}
-
-                 <div class="ls__msg_settings_r">
-                                <div style="width : 0px;"  id="panel_ls{{i.id}}" class="ls__panel">
-                            <a class="settings_text_ls settings_text_ls{{i.id}}" href="{% url 'delete_msg' i.id %}">Удалить</a>
-                                </div>
-                 </div>
-                     {% endif %}
-                </div>
-                 </div>
-                 {% if i.sent == request.user %}
-                 <script>
-
-document.getElementById('msg_text{{i.id}}').addEventListener('mouseenter', function(event) {
-    document.getElementById('settings_ls{{i.id}}').style.opacity = '1'
-});
-
-
-document.getElementById('msg_text{{i.id}}').addEventListener('mouseleave', function(event) {
-  document.getElementById('settings_ls{{i.id}}').style.opacity = '0'
-});
-
-
-     document.addEventListener('click', function(e) {
-
-if (e.target !== document.getElementById('settings_ls{{i.id}}') && !e.target.closest('#settings_ls{{i.id}}') &&  e.target !== document.getElementById('panel_ls{{i.id}}')) {
-
-
-            document.getElementById('panel_ls{{i.id}}').style.width = '0px';
-
-    document.getElementById('panel_ls{{i.id}}').style.height = '0px';
-    $('.settings_text_ls{{i.id}}').css('font-size', '0');
-      $('.settings_text_ls{{i.id}}').css('color', 'rgba(235, 235, 235 , 0)');
-
-} else if (e.target !==document.getElementById('panel_ls{{i.id}}') ) {
-
-  if (document.getElementById('panel_ls{{i.id}}').style.width !== '0px') {
-
-
-
-        document.getElementById('panel_ls{{i.id}}').style.width = '0px';
-    document.getElementById('panel_ls{{i.id}}').style.height = '0px';
-    $('.settings_text_ls{{i.id}}').css('font-size', '0');
-
-    $('.settings_text_ls{{i.id}}').css('color', 'rgba(235, 235, 235 , 0)');
-  } else {
-
-      setTimeout(function() {
- $('.settings_text_ls{{i.id}}').css('color', 'rgba(235, 235, 235 , 1)');
-}, 100);
-
-
-    document.getElementById('panel_ls{{i.id}}').style.width = '250px';
-    document.getElementById('panel_ls{{i.id}}').style.height = '56px';
-    $('.settings_text_ls{{i.id}}').css('font-size', '16px');
-  }
-}});
-
-document.addEventListener('contextmenu', function(event) {
-  if (event.target !== document.getElementById('full_msg{{i.id}}') && !event.target.closest('#full_msg{{i.id}}')) {
-
-        document.getElementById('panel_ls{{i.id}}').style.width = '0px';
-    document.getElementById('panel_ls{{i.id}}').style.height = '0px';
-    $('.settings_text_ls{{i.id}}').css('font-size', '0');
-
-    $('.settings_text_ls{{i.id}}').css('color', 'rgba(235, 235, 235 , 0)');
-
-  }
-});
-
- document.getElementById('full_msg{{i.id}}').addEventListener("contextmenu", function(event) {
-  event.preventDefault();
-
-      setTimeout(function() {
- $('.settings_text_ls{{i.id}}').css('color', 'rgba(235, 235, 235 , 1)');
-}, 100);
-
-    document.getElementById('panel_ls{{i.id}}').style.width = '250px';
-    document.getElementById('panel_ls{{i.id}}').style.height = '56px';
-    $('.settings_text_ls{{i.id}}').css('font-size', '16px');
-
-});
-
-
-
-
-
-
-                 </script>
-                 {% endif %}
+  <p>{{i.sent}} : {{i.text}}</p>
         {%endfor%}
 
         </div>
@@ -165,11 +59,12 @@ document.addEventListener('contextmenu', function(event) {
              <form autocomplete="off" id="msg_form" method="POST" action="#">
                  {% csrf_token %}
                 <input type="hidden" name="point" value="{{ prof.id }}">
+                 <input type="hidden" name="channel" value="{{ channel.id }}">
               <input id="msg_input" name="text"  type="text" placeholder="Введите сообщение">
               </form>
              {% endif %}
          </div>
-         <a href="#" onclick="document.getElementById('msg_form').submit()" class="ls__send">
+             <a href="#" id="msg_but" class="ls__send">
              <i class="bi bi-check-lg"></i>
          </a>
 
@@ -181,65 +76,43 @@ document.addEventListener('contextmenu', function(event) {
 
 {% block script %}
 
-$('#msg_form').submit(function(event) {
-    event.preventDefault(); // Предотвращаем отправку формы по умолчанию
 
-    // Получаем данные из формы
-    var formData = $(this).serialize();
+const msgForm = document.getElementById('msg_form');
 
-    // Отправляем AJAX-запрос
-    $.ajax({
-        url: window.location.href, // URL для обработки формы
-        method: 'POST',
-        data: formData,
-        success: function(response) {
 
-        },
-        error: function() {
+function msg_submit(){
 
-        }
-    });
+input_area = document.getElementById('msg_input')
+    if (input_area.value.length === 0) return;
+    ws.send(JSON.stringify({
+    "message": input_area.value,
+    }));
+    input_area.value = "";
 
-    // Очищаем поле ввода после отправки сообщения
-    $('#msg_input').val('');
+}
 
-                $.ajax({
-                    url: '/msgs/' + {{prof.id}},
-                    method: 'GET',
-                    success: function(data) {
-                        $('#ls_chat').html(data);
-                    },
-                    error: function() {
-                        // Обработать ошибку AJAX-запроса
-                    }
-                });
+document.getElementById('msg_but').addEventListener('click', function(event) {
+  event.preventDefault();
+    msg_submit();
 });
 
 
-<!--        $.ajax({-->
-<!--            url: '/msgs/' + {{prof.id}},-->
-<!--            method: 'GET',-->
-<!--            success: function(data) {-->
-<!--                $('#ls_chat').html(data);-->
-<!--            },-->
-<!--            error: function() {-->
-<!--                // Обработать ошибку AJAX-запроса-->
-<!--            }-->
-<!--        });-->
+
+msgForm.addEventListener('submit', function(event) {
+
+ event.preventDefault();
+
+msg_submit();
 
 
-<!--setInterval(function() {-->
-<!--        $.ajax({-->
-<!--            url: '/msgs/' + {{prof.id}},-->
-<!--            method: 'GET',-->
-<!--            success: function(data) {-->
-<!--                $('#ls_chat').html(data);-->
-<!--            },-->
-<!--            error: function() {-->
-<!--                // Обработать ошибку AJAX-запроса-->
-<!--            }-->
-<!--        });-->
-<!--}, 5000);-->
+
+
+
+
+
+});
+
+
 
 
 
@@ -248,14 +121,43 @@ document.getElementById('msg_input').focus()
     document.getElementById('chat_{{prof.id}}').style.background = 'rgba(224, 227, 255,0.11)';
 
 
-    var ws_url = 'ws://' + window.location.host + '/ws/ls/{{ prof.pk }}';
+function connect() {
+    ws = new WebSocket("ws://" + window.location.host + "/ws/ls/" + '{{ channel.id }}'     + "/");
 
-    var ws = new WebSocket(ws_url);
-
-    ws.onmessage = function(event) {
-        if (event.data === 'update') {
-            console.log(1)
+        ws.onopen = function(e) {
+            console.log("Successfully connected");
         }
+
+    ws.onclose = function(e) {
+        console.log("WebSocket connection closed unexpectedly. Trying to reconnect in 2s...");
+        setTimeout(function() {
+            connect();
+        }, 2000);
     };
 
+    ws.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+
+            switch (data.type) {
+        case "chat_message":
+
+            var newElement = document.createElement('p');
+            newElement.textContent = data.user + " : " + data.message;
+            document.getElementById('ls_chat').appendChild(newElement);
+            break;
+        default:
+            console.error("Unknown message type!");
+            break;
+
+    }
+scrolltobot('ls')};
+
+    ws.onerror = function(err) {
+        console.log("WebSocket encountered an error: " + err.message);
+        console.log("Closing the socket.");
+        ws.close();
+    }
+}
+
+connect();
 {% endblock %}

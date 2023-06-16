@@ -599,7 +599,8 @@ ls{
     flex-grow:1;
         .ls__chat{
             display : flex;
-
+            padding :  10px;
+            color : white;
             flex-direction : column;
 
             .ls__msg{

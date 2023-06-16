@@ -73,7 +73,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'wu.wsgi.application'
-
+ASGI_APPLICATION = 'wu.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -152,3 +152,12 @@ MEDIA_URL = '/media/'
 LOGIN_URL = '/login/'
 
 CHANNELS_LAYER = 'channels.layers.DefaultLayer'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}

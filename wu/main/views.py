@@ -13,7 +13,7 @@ import os
 
 from django.conf import settings
 
-from .models import C_user, Msg
+from .models import C_user, Msg, Channel
 
 
 def main(request):
@@ -38,21 +38,56 @@ def edit_ava(request):
         return redirect(request.META.get('HTTP_REFERER'))
     return redirect(request.META.get('HTTP_REFERER'))
 
+@login_required
+def ls(request, pk):
+    user = get_object_or_404(C_user, id=pk)
+
+
+    channel = Channel.objects.filter(members=user).filter(members=request.user).first()
+
+    if channel:
+        return redirect('channel', pk=channel.id)
+    else:
+
+        channel = Channel.objects.create()
+        channel.members.add(user, request.user)
+        return redirect('channel', pk=channel.id)
+
+
+
 @method_decorator(login_required, name='dispatch')
-class ls(DetailView):
-    model = C_user
+class channel(DetailView):
+
+
+    model = Channel
     template_name = 'wu/ls.html'
-    context_object_name = 'prof'
+    context_object_name = 'channel'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if self.request.user not in self.object.members.all():
+            return redirect(request.META.get('HTTP_REFERER'))
+
+        other_member = self.object.members.exclude(id=self.request.user.id).first()
+
+
+        self.other_member = other_member
+
+        return self.render_to_response(self.get_context_data())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['messages'] = Msg.objects.filter(Q(point=self.request.user.id, sent=context['prof']) | Q(point=context['prof'],sent=self.request.user)).order_by('date')
+        members = self.object.members.all()
+        context['messages'] =  Msg.objects.filter(channel=self.object).order_by('date')
+        context['prof'] = self.other_member
         return context
     def post(self, request, *args, **kwargs):
         text = request.POST.get('text')
-        point = self.get_object()
+        point =get_object_or_404(C_user, id=request.POST.get('point'))
+        channel_obj = get_object_or_404(Channel, id=request.POST.get('channel'))
         if not point.blacklist.filter(id=request.user.id).exists() and text.strip():
-            Msg.objects.create(sent=request.user, point=point, text=text)
+            Msg.objects.create(sent=request.user, point=point, text=text,channel=channel_obj)
         return redirect(request.META.get('HTTP_REFERER'))
 
 

@@ -1,6 +1,6 @@
 {% load static %}
 
-{% for i in messages %}
+            {% for i in messages %}
              <div id="full_msg{{i.id}}" class="ls__msg">
         {% if i.sent == request.user %}
 
@@ -21,7 +21,7 @@
                       {% if i.sent == request.user %}
 
                  <div class="ls__msg_settings_r">
-                                <div style="width:0px;" id="panel_ls{{i.id}}" class="ls__panel">
+                                <div style="width : 0px;"  id="panel_ls{{i.id}}" class="ls__panel">
                             <a class="settings_text_ls settings_text_ls{{i.id}}" href="{% url 'delete_msg' i.id %}">Удалить</a>
                                 </div>
                  </div>
