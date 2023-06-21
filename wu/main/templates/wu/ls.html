@@ -34,7 +34,44 @@
         <div class="ls__chat" id="ls_chat">
 
             {% for i in messages %}
-  <p>{{i.sent}} : {{i.text}}</p>
+             <div id="full_msg{{i.id}}" class="ls__msg">
+        {% if i.sent == request.user %}
+
+                <div class="ls__msg_content ls__r">
+
+
+        {% else %}
+                 <div  class="ls__msg_content ls__l">
+
+        {% endif %}
+
+                 <div class="ls__date">{{i.date}}</div>
+                 <div class="ls__msg_text" id="msg_text{{i.id}}">
+                     <div class="text">{{i.text}}</div>
+
+                     <a href="#" class="ls__settings_but" id="settings_ls{{i.id}}"> <i class="bi bi-three-dots-vertical"></i> </a>
+
+
+
+                 <div class="ls__msg_settings_r">
+                                <div style="width : 0px;"  id="panel_ls{{i.id}}" class="ls__panel">
+                                    {% if i.sent == request.user %}
+                            <a class="settings_text_ls settings_text_ls{{i.id}}" id="ls__del_msg{{i.id}}" href="#">Удалить</a>
+                                    {% endif %}
+                                </div>
+                 </div>
+                </div>
+                </div>
+                    <script>
+                        umsg({{i.id}})
+                    </script>
+                 {% if i.sent == request.user %}
+                 <script>
+
+selfmsg({{i.id}})
+                 </script>
+                 {% endif %}
+                    </div>
         {%endfor%}
 
         </div>
@@ -75,7 +112,7 @@
 {% endblock %}
 
 {% block script %}
-
+scrolltobot('ls')
 
 const msgForm = document.getElementById('msg_form');
 
@@ -98,28 +135,22 @@ document.getElementById('msg_but').addEventListener('click', function(event) {
 
 
 
-msgForm.addEventListener('submit', function(event) {
-
- event.preventDefault();
-
-msg_submit();
-
-
+if (msgForm) {
+  msgForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+    msg_submit();
+  });
 
 
 
 
 
-});
 
 
 
-
-
-scrolltobot('ls')
 document.getElementById('msg_input').focus()
     document.getElementById('chat_{{prof.id}}').style.background = 'rgba(224, 227, 255,0.11)';
-
+}
 
 function connect() {
     ws = new WebSocket("ws://" + window.location.host + "/ws/ls/" + '{{ channel.id }}'     + "/");
@@ -140,10 +171,59 @@ function connect() {
 
             switch (data.type) {
         case "chat_message":
+  var newElement = document.createElement('div');
+  newElement.id = 'full_msg' + data.id;
+  newElement.className = 'ls__msg';
 
-            var newElement = document.createElement('p');
-            newElement.textContent = data.user + " : " + data.message;
-            document.getElementById('ls_chat').appendChild(newElement);
+  var innerDiv1 = document.createElement('div');
+  if (data.user === '{{ request.user }}') {
+    innerDiv1.className = 'ls__msg_content ls__r';
+  } else {
+    innerDiv1.className = 'ls__msg_content ls__l';
+  }
+
+  var innerDiv2 = document.createElement('div');
+  innerDiv2.className = 'ls__date';
+  innerDiv2.textContent = data.date;
+
+  var innerDiv3 = document.createElement('div');
+  innerDiv3.className = 'ls__msg_text';
+innerDiv3.id = 'msg_text' + data.id;
+
+  var innerDiv4 = document.createElement('div');
+  innerDiv4.className = 'text';
+  innerDiv4.textContent = data.message;
+
+  innerDiv3.appendChild(innerDiv4);
+  innerDiv3.innerHTML += '<a href="#" class="ls__settings_but" id="settings_ls' + data.id + '"><i class="bi bi-three-dots-vertical"></i></a>';
+  innerDiv1.appendChild(innerDiv2);
+  innerDiv1.appendChild(innerDiv3);
+  newElement.appendChild(innerDiv1);
+
+  if (data.user === '{{ request.user }}') {
+    var innerDiv5 = document.createElement('div');
+    innerDiv5.className = 'ls__msg_settings_r';
+
+    var innerDiv6 = document.createElement('div');
+    innerDiv6.style.width = '0px';
+    innerDiv6.id = 'panel_ls' + data.id;
+    innerDiv6.className = 'ls__panel';
+
+    var innerLink = document.createElement('a');
+    innerLink.className = 'settings_text_ls settings_text_ls' + data.id;
+    innerLink.href = "/delete/msg/" + data.id;
+    innerLink.textContent = 'Удалить';
+
+    innerDiv6.appendChild(innerLink);
+    innerDiv5.appendChild(innerDiv6);
+    innerDiv3.appendChild(innerDiv5);
+  }
+
+  document.getElementById('ls_chat').appendChild(newElement);
+umsg(data.id);
+  if (data.user === '{{ request.user }}') {
+    selfmsg(data.id);
+  }
             break;
         default:
             console.error("Unknown message type!");

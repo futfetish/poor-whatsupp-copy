@@ -649,17 +649,15 @@ ls{
                             width : 24px;
 
                          }
-                    }
-                    .ls__msg_settings_r {
+                                           .ls__msg_settings_r {
                     z-index : 4;
                  position : absolute;
-
                  top : 25px;
-                 right :  5px;
-                 height : 0px;
-                 width : 300px;
+                height : 0px;
+                         width : 300px;
+
                  display : flex;
-                 justify-content : flex-end;
+
                  .ls__panel{
                      border-radius : 2px;
                      box-shadow : 0px 0px 10px rgba(0,0,0,0.1);
@@ -684,31 +682,45 @@ ls{
 
 
                     }}}}
+                    }
+
                 }
                 .ls__r{
+
                     justify-content : right;
                     .ls__msg_text{
                          background : #719177;
                          .ls__settings_but{
                             background : #719177;
                          }
+                         .ls__msg_settings_r {
+
+                             right :  5px;
+                             justify-content : flex-end;
+
+                    }
                     }
 
                 }
                 .ls__l{
+
                     justify-content : left;
                     .ls__msg_text{
                           background : #707070;
                            .ls__settings_but{
                                 background : #707070;
                          }
+                        .ls__msg_settings_r {
+                            left : calc(100% - 10px);
+
+                            justify-content : flex-start;
                     }
 
 
                 }
-            }
+            }}}
 
-        }
+
 
         .ls__blacklist_notf{
             .ls__blacklist_u{

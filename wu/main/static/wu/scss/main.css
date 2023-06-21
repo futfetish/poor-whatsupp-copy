@@ -825,21 +825,17 @@ ls .ls__content .ls__chat .ls__msg .ls__msg_content .ls__msg_text .ls__settings_
   height: 24px;
   width: 24px;
 }
-ls .ls__content .ls__chat .ls__msg .ls__msg_content .ls__msg_settings_r {
+ls .ls__content .ls__chat .ls__msg .ls__msg_content .ls__msg_text .ls__msg_settings_r {
   z-index: 4;
   position: absolute;
   top: 25px;
-  right: 5px;
   height: 0px;
   width: 300px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
 }
-ls .ls__content .ls__chat .ls__msg .ls__msg_content .ls__msg_settings_r .ls__panel {
+ls .ls__content .ls__chat .ls__msg .ls__msg_content .ls__msg_text .ls__msg_settings_r .ls__panel {
   border-radius: 2px;
   -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
           box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -857,7 +853,7 @@ ls .ls__content .ls__chat .ls__msg .ls__msg_content .ls__msg_settings_r .ls__pan
           flex-direction: column;
   padding: 3% 0px;
 }
-ls .ls__content .ls__chat .ls__msg .ls__msg_content .ls__msg_settings_r .ls__panel a {
+ls .ls__content .ls__chat .ls__msg .ls__msg_content .ls__msg_text .ls__msg_settings_r .ls__panel a {
   -webkit-transition: font-size 0.1s ease-in-out;
   transition: font-size 0.1s ease-in-out;
   -webkit-transition: color 0.05s ease-in-out;
@@ -875,7 +871,7 @@ ls .ls__content .ls__chat .ls__msg .ls__msg_content .ls__msg_settings_r .ls__pan
   display: flex;
   color: rgba(235, 235, 235, 0);
 }
-ls .ls__content .ls__chat .ls__msg .ls__msg_content .ls__msg_settings_r .ls__panel a:hover {
+ls .ls__content .ls__chat .ls__msg .ls__msg_content .ls__msg_text .ls__msg_settings_r .ls__panel a:hover {
   background: #2e2e36;
 }
 ls .ls__content .ls__chat .ls__msg .ls__r {
@@ -889,6 +885,12 @@ ls .ls__content .ls__chat .ls__msg .ls__r .ls__msg_text {
 ls .ls__content .ls__chat .ls__msg .ls__r .ls__msg_text .ls__settings_but {
   background: #719177;
 }
+ls .ls__content .ls__chat .ls__msg .ls__r .ls__msg_text .ls__msg_settings_r {
+  right: 5px;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
 ls .ls__content .ls__chat .ls__msg .ls__l {
   -webkit-box-pack: left;
       -ms-flex-pack: left;
@@ -899,6 +901,12 @@ ls .ls__content .ls__chat .ls__msg .ls__l .ls__msg_text {
 }
 ls .ls__content .ls__chat .ls__msg .ls__l .ls__msg_text .ls__settings_but {
   background: #707070;
+}
+ls .ls__content .ls__chat .ls__msg .ls__l .ls__msg_text .ls__msg_settings_r {
+  left: calc(100% - 10px);
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
 }
 ls .ls__content .ls__blacklist_notf {
   padding: 20px;
